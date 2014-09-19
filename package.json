@@ -1,5 +1,5 @@
 {
-  "name": "kMeans",
+  "name": "kmeans",
   "version": "0.0.1",
   "description": "k-Means clustering algorithm",
   "main": "index.js",

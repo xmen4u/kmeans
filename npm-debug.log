@@ -1,0 +1,108 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'publish' ]
+2 info using npm@1.4.27
+3 info using node@v0.10.31
+4 verbose publish [ '.' ]
+5 verbose cache add [ '.', null ]
+6 verbose cache add name=undefined spec="." args=[".",null]
+7 verbose parsed url { protocol: null,
+7 verbose parsed url   slashes: null,
+7 verbose parsed url   auth: null,
+7 verbose parsed url   host: null,
+7 verbose parsed url   port: null,
+7 verbose parsed url   hostname: null,
+7 verbose parsed url   hash: null,
+7 verbose parsed url   search: null,
+7 verbose parsed url   query: null,
+7 verbose parsed url   pathname: '.',
+7 verbose parsed url   path: '.',
+7 verbose parsed url   href: '.' }
+8 silly lockFile 3a52ce78- .
+9 verbose lock . /Users/gtam/.npm/3a52ce78-.lock
+10 verbose tar pack [ '/Users/gtam/.npm/kmeans/0.0.1/package.tgz', '.' ]
+11 verbose tarball /Users/gtam/.npm/kmeans/0.0.1/package.tgz
+12 verbose folder .
+13 info prepublish kmeans@0.0.1
+14 silly lockFile 1f1177db-tar tar://.
+15 verbose lock tar://. /Users/gtam/.npm/1f1177db-tar.lock
+16 silly lockFile 804a8181-tam-npm-kmeans-0-0-1-package-tgz tar:///Users/gtam/.npm/kmeans/0.0.1/package.tgz
+17 verbose lock tar:///Users/gtam/.npm/kmeans/0.0.1/package.tgz /Users/gtam/.npm/804a8181-tam-npm-kmeans-0-0-1-package-tgz.lock
+18 silly lockFile 1f1177db-tar tar://.
+19 silly lockFile 1f1177db-tar tar://.
+20 silly lockFile 804a8181-tam-npm-kmeans-0-0-1-package-tgz tar:///Users/gtam/.npm/kmeans/0.0.1/package.tgz
+21 silly lockFile 804a8181-tam-npm-kmeans-0-0-1-package-tgz tar:///Users/gtam/.npm/kmeans/0.0.1/package.tgz
+22 silly lockFile 16e26685-rs-gtam-npm-kmeans-0-0-1-package /Users/gtam/.npm/kmeans/0.0.1/package
+23 verbose lock /Users/gtam/.npm/kmeans/0.0.1/package /Users/gtam/.npm/16e26685-rs-gtam-npm-kmeans-0-0-1-package.lock
+24 silly lockFile 16e26685-rs-gtam-npm-kmeans-0-0-1-package /Users/gtam/.npm/kmeans/0.0.1/package
+25 silly lockFile 16e26685-rs-gtam-npm-kmeans-0-0-1-package /Users/gtam/.npm/kmeans/0.0.1/package
+26 silly lockFile 3a52ce78- .
+27 silly lockFile 3a52ce78- .
+28 silly publish { name: 'kmeans',
+28 silly publish   version: '0.0.1',
+28 silly publish   description: 'k-Means clustering algorithm',
+28 silly publish   main: 'index.js',
+28 silly publish   scripts: { test: 'grunt travis --verbose' },
+28 silly publish   keywords: [ 'kmeans', 'means', 'cluster', 'classify' ],
+28 silly publish   dependencies:
+28 silly publish    { grunt: '^0.4.5',
+28 silly publish      'grunt-contrib-jshint': '^0.10.0',
+28 silly publish      'grunt-contrib-watch': '^0.6.1',
+28 silly publish      jshint: '^2.5.5',
+28 silly publish      matchdep: '^0.3.0' },
+28 silly publish   devDependencies:
+28 silly publish    { 'grunt-contrib-jshint': '^0.10.0',
+28 silly publish      'grunt-contrib-watch': '^0.6.1' },
+28 silly publish   author: { name: 'Gil Tamari' },
+28 silly publish   license: 'BSD',
+28 silly publish   readme: '[![Build Status](https://travis-ci.org/xmen4u/kmeans.svg)](https://travis-ci.org/xmen4u/kmeans)\n\n\n## KMeans clustering algorithm \n============================================\n\nA node module, that implements k-means clustering algorithm\n\nk-means is a super-fast supervised algorithm for clustering points \nit does this in O(n) Space complexity and O(t * k * n) time complexity \nit can be parallelized when the data are divided into N sets and each separate data set is clusterd\nthe algorithm converges quickly\n\nIt is also provided with a full example of usage and dataset creation.\nI hope to provide a working stack [FE + BE] to use this with real-time and cache capabilities\n\nusing jSHint, matchdep , stream, grunt.js \n\nUse this with my permission only\n\n## ToC\n---------------------\n\n1. [Main app](#main)\n\n\n<a name="main">Main app</a>\n---------------------\n\n\n## Install\n```\nnpm install kmeans\n```\n\nplace the ```distance.js``` where ever you want and include it, i\'ve used an iOc style \nso you could adjust it and plug-it in the module\n\n\n## Initialization\n\nwe need to initialize the distance object, you can add any distance metric you wish \nto distance.js\n```\nvar Distance \t = require(\'./lib/distance\'),\n\tdistances    = new Distance(),\n\t// KMeans section\n\tKMeans       = require(\'./lib/kmeans.js\'),\n\tkmeans,\n\t// File section\n\tfs           = require(\'fs\'),\n\treadline     = require(\'readline\'), // using the UNSTABLE readline built-in node module\n\t// Stream section\n\tpoints       = [],\n\trl, // read-line\n\tin_stream\n\n```\nafter initialization, you need to create a multi-dimensional vector, an array of arrays:\n```[[1,2],[1,4],[2,5],[5,9],...,[10,12]]```\njust like the "creation of the data set line", you can find the model inside /models , it looks like:\n\n```\n\n\nin code we grab it via stream from a line-by-line [newline] structured flat file [so we won\'t have limit on memory space]\n```\nin_stream = fs.createReadStream(\'./books.txt\'),\nrl = readline.createInterface({input: in_stream,terminal: false})\n\nrl.on(\'line\', function(line) {\n\tpoints.push(JSON.parse(line))\n});\n\nrl.on(\'close\', function() {\n\tvar clustering_obj\n\n\t// initializing it here, because of our new custom distance function\n\tkmeans = new KMeans(distances)\n\n    clustering_obj = kmeans.cluster(points,29,\'customDistance\')\n    console.log(\'FINISHED reading \' + points.length + \' and clustering them\')\n    console.log(clustering_obj)\n\n});\n```\nfinally we can use the algorithm on specific coordinates of the vector[s], we do that\nvia the translateToSub\n```\nfunction translateToSub(in_point,based_on_cells){\n  var ret=[];\n\n  based_on_cells.forEach(function(index){\n    ret.push(in_point[index]);\n  });\n  return ret;\n}// translateToSub\n\n\ndistances.customDistance = function(v1,v2){\n\tvar based_on_cells = [0,6] // where the 2-d cells reside in\n\n\tif (based_on_cells instanceof Array){\n\t  v1 = translateToSub(v1,based_on_cells)\n\n\t  v2 = translateToSub(v2,based_on_cells)\n\n\t}// if - based_on_cells\n\n\treturn distances.euclidean(v1,v2)//haversine(v1,v2)\n}\n\n```\n\n\n## License\n\nBSD -  ask for my permission\n',
+28 silly publish   readmeFilename: 'README.md',
+28 silly publish   gitHead: 'c284d0fce126528771784d5111131721ff6e12b0',
+28 silly publish   _id: 'kmeans@0.0.1',
+28 silly publish   _shasum: '25cec9d1c18ccbaff6be7d6e3ace3267b6d9f363',
+28 silly publish   _from: '.' }
+29 verbose request where is /kmeans
+30 verbose request registry https://registry.npmjs.org/
+31 verbose request id 6f1806f2a9a92823
+32 verbose url raw /kmeans
+33 verbose url resolving [ 'https://registry.npmjs.org/', './kmeans' ]
+34 verbose url resolved https://registry.npmjs.org/kmeans
+35 verbose request where is https://registry.npmjs.org/kmeans
+36 info trying registry request attempt 1 at 01:56:25
+37 http PUT https://registry.npmjs.org/kmeans
+38 http 403 https://registry.npmjs.org/kmeans
+39 verbose headers { date: 'Fri, 19 Sep 2014 22:56:31 GMT',
+39 verbose headers   server: 'CouchDB/1.5.0 (Erlang OTP/R14B04)',
+39 verbose headers   'content-type': 'application/json',
+39 verbose headers   'cache-control': 'max-age=60',
+39 verbose headers   'content-length': '5977',
+39 verbose headers   'accept-ranges': 'bytes',
+39 verbose headers   via: '1.1 varnish',
+39 verbose headers   'x-served-by': 'cache-lo82-LHR',
+39 verbose headers   'x-cache': 'MISS',
+39 verbose headers   'x-cache-hits': '0',
+39 verbose headers   'x-timer': 'S1411167385.499027,VS0,VE5729',
+39 verbose headers   'keep-alive': 'timeout=10, max=50',
+39 verbose headers   connection: 'Keep-Alive' }
+40 error publish Failed PUT 403
+41 error Error: forbidden cannot modify pre-existing version: 0.0.1
+41 error old={"name":"kmeans","description":"Javascript implementation of the K-means clustering algorithm.","version":"0.0.1","directories":{"lib":"./lib"},"main":"./lib/kmeans","author":{"name":"Olivier Lalonde","email":"olalonde@gmail.com","url":"http://www.syskall.com/"},"repository":{"type":"git","url":"git://github.com/olalonde/kmeans.git"},"homepage":"https://github.com/olalonde/kmeans","dependencies":{},"_npmUser":{"name":"olalonde","email":"olalonde@gmail.com"},"_id":"kmeans@0.0.1","devDependencies":{},"optionalDependencies":{},"engines":{"node":"*"},"_engineSupported":true,"_npmVersion":"1.1.0-2","_nodeVersion":"v0.6.8","_defaultsLoaded":true,"dist":{"shasum":"c246c7d0e4a1cb5bb5d396d9c4e75fa79b70bba4","tarball":"http://registry.npmjs.org/kmeans/-/kmeans-0.0.1.tgz"},"maintainers":[{"name":"olalonde","email":"olalonde@gmail.com"}]}
+41 error new={"name":"kmeans","version":"0.0.1","description":"k-Means clustering algorithm","main":"index.js","scripts":{"test":"grunt travis --verbose"},"keywords":["kmeans","means","cluster","classify"],"dependencies":{"grunt":"^0.4.5","grunt-contrib-jshint":"^0.10.0","grunt-contrib-watch":"^0.6.1","jshint":"^2.5.5","matchdep":"^0.3.0"},"devDependencies":{"grunt-contrib-jshint":"^0.10.0","grunt-contrib-watch":"^0.6.1"},"author":{"name":"Gil Tamari"},"license":"BSD","readme":"[![Build Status](https://travis-ci.org/xmen4u/kmeans.svg)](https://travis-ci.org/xmen4u/kmeans)\u000a\u000a\u000a## KMeans clustering algorithm \u000a============================================\u000a\u000aA node module, that implements k-means clustering algorithm\u000a\u000ak-means is a super-fast supervised algorithm for clustering points \u000ait does this in O(n) Space complexity and O(t * k * n) time complexity \u000ait can be parallelized when the data are divided into N sets and each separate data set is clusterd\u000athe algorithm converges quickly\u000a\u000aIt is also provided with a full example of usage and dataset creation.\u000aI hope to provide a working stack [FE + BE] to use this with real-time and cache capabilities\u000a\u000ausing jSHint, matchdep , stream, grunt.js \u000a\u000aUse this with my permission only\u000a\u000a## ToC\u000a---------------------\u000a\u000a1. [Main app](#main)\u000a\u000a\u000a<a name=\"main\">Main app</a>\u000a---------------------\u000a\u000a\u000a## Install\u000a```\u000anpm install kmeans\u000a```\u000a\u000aplace the ```distance.js``` where ever you want and include it, i've used an iOc style \u000aso you could adjust it and plug-it in the module\u000a\u000a\u000a## Initialization\u000a\u000awe need to initialize the distance object, you can add any distance metric you wish \u000ato distance.js\u000a```\u000avar Distance \u0009 = require('./lib/distance'),\u000a\u0009distances    = new Distance(),\u000a\u0009// KMeans section\u000a\u0009KMeans       = require('./lib/kmeans.js'),\u000a\u0009kmeans,\u000a\u0009// File section\u000a\u0009fs           = require('fs'),\u000a\u0009readline     = require('readline'), // using the UNSTABLE readline built-in node module\u000a\u0009// Stream section\u000a\u0009points       = [],\u000a\u0009rl, // read-line\u000a\u0009in_stream\u000a\u000a```\u000aafter initialization, you need to create a multi-dimensional vector, an array of arrays:\u000a```[[1,2],[1,4],[2,5],[5,9],...,[10,12]]```\u000ajust like the \"creation of the data set line\", you can find the model inside /models , it looks like:\u000a\u000a```\u000a\u000a\u000ain code we grab it via stream from a line-by-line [newline] structured flat file [so we won't have limit on memory space]\u000a```\u000ain_stream = fs.createReadStream('./books.txt'),\u000arl = readline.createInterface({input: in_stream,terminal: false})\u000a\u000arl.on('line', function(line) {\u000a\u0009points.push(JSON.parse(line))\u000a});\u000a\u000arl.on('close', function() {\u000a\u0009var clustering_obj\u000a\u000a\u0009// initializing it here, because of our new custom distance function\u000a\u0009kmeans = new KMeans(distances)\u000a\u000a    clustering_obj = kmeans.cluster(points,29,'customDistance')\u000a    console.log('FINISHED reading ' + points.length + ' and clustering them')\u000a    console.log(clustering_obj)\u000a\u000a});\u000a```\u000afinally we can use the algorithm on specific coordinates of the vector[s], we do that\u000avia the translateToSub\u000a```\u000afunction translateToSub(in_point,based_on_cells){\u000a  var ret=[];\u000a\u000a  based_on_cells.forEach(function(index){\u000a    ret.push(in_point[index]);\u000a  });\u000a  return ret;\u000a}// translateToSub\u000a\u000a\u000adistances.customDistance = function(v1,v2){\u000a\u0009var based_on_cells = [0,6] // where the 2-d cells reside in\u000a\u000a\u0009if (based_on_cells instanceof Array){\u000a\u0009  v1 = translateToSub(v1,based_on_cells)\u000a\u000a\u0009  v2 = translateToSub(v2,based_on_cells)\u000a\u000a\u0009}// if - based_on_cells\u000a\u000a\u0009return distances.euclidean(v1,v2)//haversine(v1,v2)\u000a}\u000a\u000a```\u000a\u000a\u000a## License\u000a\u000aBSD -  ask for my permission\u000a","readmeFilename":"README.md","gitHead":"c284d0fce126528771784d5111131721ff6e12b0","_id":"kmeans@0.0.1","_shasum":"25cec9d1c18ccbaff6be7d6e3ace3267b6d9f363","_from":".","_npmVersion":"1.4.27","_npmUser":{"name":"xmen4u","email":"xmen4u@gmail.com"},"maintainers":[{"name":"xmen4u","email":"xmen4u@gmail.com"}],"dist":{"shasum":"25cec9d1c18ccbaff6be7d6e3ace3267b6d9f363","tarball":"http://registry.npmjs.org/kmeans/-/kmeans-0.0.1.tgz"}}: kmeans
+41 error     at RegClient.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:308:14)
+41 error     at Request._callback (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:246:65)
+41 error     at Request.self.callback (/usr/local/lib/node_modules/npm/node_modules/request/request.js:236:22)
+41 error     at Request.emit (events.js:98:17)
+41 error     at Request.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:1142:14)
+41 error     at Request.emit (events.js:117:20)
+41 error     at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:1096:12)
+41 error     at IncomingMessage.emit (events.js:117:20)
+41 error     at _stream_readable.js:943:16
+41 error     at process._tickCallback (node.js:419:13)
+42 error If you need help, you may report this *entire* log,
+42 error including the npm and node versions, at:
+42 error     <http://github.com/npm/npm/issues>
+43 error System Darwin 13.3.0
+44 error command "node" "/usr/local/bin/npm" "publish"
+45 error cwd /Users/gtam/projects/nodejs/algos/kmeans
+46 error node -v v0.10.31
+47 error npm -v 1.4.27
+48 verbose exit [ 1, true ]
