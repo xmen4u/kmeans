@@ -1,6 +1,6 @@
 {
   "name": "kmeans",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "k-Means clustering algorithm",
   "main": "index.js",
   "scripts": {
